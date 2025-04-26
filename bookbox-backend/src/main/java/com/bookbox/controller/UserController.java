@@ -43,4 +43,13 @@ public class UserController {
     public void deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
     }
+
+    @PostMapping("/login")
+    public User login(@RequestBody User loginRequest) {
+        User user = userService.login(loginRequest.getEmail(), loginRequest.getPassword());
+        if (user != null) {
+            user.setPassword(null); // Hide password in response
+        }
+        return user;
+    }
 }
