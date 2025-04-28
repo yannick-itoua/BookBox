@@ -21,12 +21,14 @@ export default function UsersPage() {
       });
   }, []);
 
-  if (loading) return <div className="p-4">Loading...</div>;
+  if (loading) return <div className="p-4 text-[#5b3921]">Loading...</div>;
 
   return (
-    <div className="max-w-2xl mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Users</h1>
-      <UserList users={users} />
+    <div className="min-h-screen max-w-2xl mx-auto p-4 bg-gradient-to-br from-[#f5ecd7] via-[#e3caa5] to-[#a67c52]">
+      <h1 className="text-2xl font-bold mb-4 text-[#5b3921]">Users</h1>
+      <div className="bg-white/90 rounded shadow p-4">
+        <UserList users={users} />
+      </div>
     </div>
   );
 }

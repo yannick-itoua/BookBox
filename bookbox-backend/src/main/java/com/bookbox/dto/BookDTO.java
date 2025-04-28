@@ -9,12 +9,13 @@ public class BookDTO {
     private String genre;
     private boolean available;
     private String coverUrl;
+    private String isbn;
     private Long ownerId;
     private Long borrowerId;
 
     public BookDTO() {}
 
-    public BookDTO(Long id, String title, String author, String description, String genre, boolean available, String coverUrl, Long ownerId, Long borrowerId) {
+    public BookDTO(Long id, String title, String author, String description, String genre, boolean available, String coverUrl, String isbn, Long ownerId, Long borrowerId) {
         this.id = id;
         this.title = title;
         this.author = author;
@@ -22,6 +23,7 @@ public class BookDTO {
         this.genre = genre;
         this.available = available;
         this.coverUrl = coverUrl;
+        this.isbn = isbn;
         this.ownerId = ownerId;
         this.borrowerId = borrowerId;
     }
@@ -82,6 +84,14 @@ public class BookDTO {
 
     public void setCoverUrl(String coverUrl) {
         this.coverUrl = coverUrl;
+    }
+
+    public String getIsbn() {
+        return isbn;
+    }
+
+    public void setIsbn(String isbn) {
+        this.isbn = isbn;
     }
 
     public Long getOwnerId() {

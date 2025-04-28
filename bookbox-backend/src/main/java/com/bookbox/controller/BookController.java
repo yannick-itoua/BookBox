@@ -55,4 +55,23 @@ public class BookController {
     public void deleteBook(@PathVariable Long id) {
         bookService.deleteBook(id);
     }
+
+    @GetMapping("/search")
+    public List<Book> searchBooks(
+        @RequestParam(required = false, defaultValue = "") String title,
+        @RequestParam(required = false, defaultValue = "") String genre,
+        @RequestParam(required = false, defaultValue = "") String author
+    ) {
+        return bookService.searchBooks(title, genre, author);
+    }
+
+    @PutMapping("/{bookId}/borrow")
+    public BookDTO borrowBook(@PathVariable Long bookId, @RequestParam Long userId) {
+        return bookService.borrowBook(bookId, userId);
+    }
+
+    @PutMapping("/{bookId}/return")
+    public BookDTO returnBook(@PathVariable Long bookId) {
+        return bookService.returnBook(bookId);
+    }
 }

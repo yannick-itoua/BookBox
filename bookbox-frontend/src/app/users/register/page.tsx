@@ -36,57 +36,58 @@ export default function RegisterPage() {
       setUsername("");
       setEmail("");
       setPassword("");
-      // Redirect to login page after successful registration
       setTimeout(() => {
         router.push("/users/login");
       }, 1000);
-    } catch (err) {
+    } catch {
       setError("Registration failed. Please try again.");
     }
   };
 
   return (
-    <div className="max-w-sm mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Register</h1>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label className="block font-medium">Username</label>
-          <input
-            className="w-full border rounded px-2 py-1"
-            value={username}
-            onChange={e => setUsername(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label className="block font-medium">Email</label>
-          <input
-            type="email"
-            className="w-full border rounded px-2 py-1"
-            value={email}
-            onChange={e => setEmail(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label className="block font-medium">Password</label>
-          <input
-            type="password"
-            className="w-full border rounded px-2 py-1"
-            value={password}
-            onChange={e => setPassword(e.target.value)}
-            required
-          />
-        </div>
-        {error && <div className="text-red-600">{error}</div>}
-        {success && <div className="text-green-600">Registration successful! Redirecting to login...</div>}
-        <button
-          type="submit"
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-        >
-          Register
-        </button>
-      </form>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#f5ecd7] via-[#e3caa5] to-[#a67c52]">
+      <div className="w-full max-w-sm bg-white/90 rounded shadow p-6">
+        <h1 className="text-2xl font-bold mb-4 text-[#5b3921]">Register</h1>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="block font-medium text-[#5b3921]">Username</label>
+            <input
+              className="w-full border rounded px-3 py-2 text-[#5b3921] bg-white focus:outline-none focus:ring-2 focus:ring-[#a67c52] text-base"
+              value={username}
+              onChange={e => setUsername(e.target.value)}
+              required
+            />
+          </div>
+          <div>
+            <label className="block font-medium text-[#5b3921]">Email</label>
+            <input
+              type="email"
+              className="w-full border rounded px-3 py-2 text-[#5b3921] bg-white focus:outline-none focus:ring-2 focus:ring-[#a67c52] text-base"
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              required
+            />
+          </div>
+          <div>
+            <label className="block font-medium text-[#5b3921]">Password</label>
+            <input
+              type="password"
+              className="w-full border rounded px-3 py-2 text-[#5b3921] bg-white focus:outline-none focus:ring-2 focus:ring-[#a67c52] text-base"
+              value={password}
+              onChange={e => setPassword(e.target.value)}
+              required
+            />
+          </div>
+          {error && <div className="text-red-600">{error}</div>}
+          {success && <div className="text-green-600">Registration successful! Redirecting to login...</div>}
+          <button
+            type="submit"
+            className="bg-[#a67c52] text-white px-4 py-2 rounded hover:bg-[#7c5e3c] text-base"
+          >
+            Register
+          </button>
+        </form>
+      </div>
     </div>
   );
 }

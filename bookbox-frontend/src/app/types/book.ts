@@ -8,4 +8,6 @@ export type Book = {
   coverUrl?: string | null;
   ownerId?: number;
   borrowerId?: number | null;
+  isbn?: string; // Add this line for Open Library integration
+  borrower?: { id: number; username: string };
 };

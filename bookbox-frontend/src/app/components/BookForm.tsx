@@ -16,6 +16,7 @@ type Book = {
   coverUrl?: string | null;
   ownerId?: number;
   borrowerId?: number | null;
+  isbn?: string;
 };
 
 export default function BookForm({ onSubmit, initialData = {} }: BookFormProps) {
@@ -25,6 +26,7 @@ export default function BookForm({ onSubmit, initialData = {} }: BookFormProps) 
   const [description, setDescription] = useState(initialData.description || "");
   const [available, setAvailable] = useState(initialData.available ?? true);
   const [coverUrl, setCoverUrl] = useState(initialData.coverUrl || "");
+  const [isbn, setIsbn] = useState(initialData.isbn || "");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,6 +37,7 @@ export default function BookForm({ onSubmit, initialData = {} }: BookFormProps) 
       description,
       available,
       coverUrl,
+      isbn,
     });
   };
 
@@ -80,6 +83,14 @@ export default function BookForm({ onSubmit, initialData = {} }: BookFormProps) 
           className="w-full border rounded px-2 py-1"
           value={coverUrl}
           onChange={e => setCoverUrl(e.target.value)}
+        />
+      </div>
+      <div>
+        <label className="block font-medium">ISBN</label>
+        <input
+          className="w-full border rounded px-2 py-1"
+          value={isbn}
+          onChange={e => setIsbn(e.target.value)}
         />
       </div>
       <div className="flex items-center">

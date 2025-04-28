@@ -1,5 +1,6 @@
 package com.bookbox.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.util.List;
 
@@ -19,9 +20,11 @@ public class User {
 
     // Optional: lending history, books owned, etc.
     @OneToMany(mappedBy = "owner")
+    @JsonManagedReference("owner-books")
     private List<Book> ownedBooks;
 
     @OneToMany(mappedBy = "borrower")
+    @JsonManagedReference("borrower-books")
     private List<Book> borrowedBooks;
 
     // Constructors

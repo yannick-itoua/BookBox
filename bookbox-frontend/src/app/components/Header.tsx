@@ -1,9 +1,11 @@
 "use client";
 import Link from "next/link";
 import { useAuth } from "../context/AuthContext";
+import { usePathname } from "next/navigation";
 
 export default function Header() {
   const { user, logout } = useAuth();
+  const pathname = usePathname();
 
   return (
     <header className="w-full py-4 px-8 bg-white shadow mb-8 flex items-center justify-between">
@@ -28,20 +30,23 @@ export default function Header() {
             </button>
           </div>
         ) : (
-          <div className="flex gap-4">
-            <Link
-              href="/users/login"
-              className="bg-gray-800 text-white px-3 py-1 rounded hover:bg-gray-900"
-            >
-              Login
-            </Link>
-            <Link
-              href="/users/register"
-              className="bg-gray-500 text-white px-3 py-1 rounded hover:bg-gray-600"
-            >
-              Register
-            </Link>
-          </div>
+          // Only show Login/Register if NOT on the home page
+          pathname !== "/" && (
+            <div className="flex gap-4">
+              <Link
+                href="/users/login"
+                className="bg-gray-800 text-white px-3 py-1 rounded hover:bg-gray-900"
+              >
+                Login
+              </Link>
+              <Link
+                href="/users/register"
+                className="bg-gray-500 text-white px-3 py-1 rounded hover:bg-gray-600"
+              >
+                Register
+              </Link>
+            </div>
+          )
         )}
       </div>
     </header>

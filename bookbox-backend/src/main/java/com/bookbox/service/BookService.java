@@ -34,6 +34,7 @@ public class BookService {
             book.getGenre(),
             book.isAvailable(),
             book.getCoverUrl(),
+            book.getIsbn(), // <-- Add this line for ISBN
             book.getOwner() != null ? book.getOwner().getId() : null,
             book.getBorrower() != null ? book.getBorrower().getId() : null
         );
@@ -104,5 +105,28 @@ public class BookService {
 
     public void deleteBook(Long id) {
         bookRepository.deleteById(id);
+    }
+
+    public List<Book> searchBooks(String title, String genre, String author) {
+        return bookRepository.findByTitleContainingIgnoreCaseAndGenreContainingIgnoreCaseAndAuthorContainingIgnoreCase(
+            title, genre, author
+        );
+    }
+
+    public BookDTO borrowBook(Long bookId, Long userId) {
+        Book book = bookRepository.findById(bookId).orElseThrow();
+        User user = userRepository.findById(userId).orElseThrow();
+        book.setBorrower(user);
+        book.setAvailable(false);
+        Book updated = bookRepository.save(book);
+        return toDTO(updated);
+    }
+
+    public BookDTO returnBook(Long bookId) {
+        Book book = bookRepository.findById(bookId).orElseThrow();
+        book.setBorrower(null);
+        book.setAvailable(true);
+        Book updated = bookRepository.save(book);
+        return toDTO(updated);
     }
 }

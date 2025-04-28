@@ -1,5 +1,6 @@
 package com.bookbox.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import java.util.Objects;
 
@@ -23,12 +24,16 @@ public class Book {
 
     private String coverUrl;
 
+    private String isbn;
+
     @ManyToOne
     @JoinColumn(name = "owner_id")
+    @JsonBackReference("owner-books")
     private User owner;
 
     @ManyToOne
     @JoinColumn(name = "borrower_id")
+    @JsonBackReference("borrower-books")
     private User borrower;
 
     // Constructors
@@ -99,6 +104,14 @@ public class Book {
 
     public void setCoverUrl(String coverUrl) {
         this.coverUrl = coverUrl;
+    }
+
+    public String getIsbn() {
+        return isbn;
+    }
+
+    public void setIsbn(String isbn) {
+        this.isbn = isbn;
     }
 
     public User getOwner() {
