@@ -1,0 +1,36 @@
+version: "3.8"
+
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: bookbox
+      POSTGRES_USER: bookbox
+      POSTGRES_PASSWORD: bookbox
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  backend:
+    build: ./bookbox-backend
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/bookbox
+      SPRING_DATASOURCE_USERNAME: bookbox
+      SPRING_DATASOURCE_PASSWORD: bookbox
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+
+  frontend:
+    build: ./bookbox-frontend
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:8080
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+
+volumes:
+  db_data:

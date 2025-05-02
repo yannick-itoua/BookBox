@@ -69,6 +69,28 @@ export default function BooksPage() {
     setBorrowLoading(null);
   };
 
+  const handleReturn = async (bookId: number) => {
+    if (!user) {
+      alert("You must be logged in to return a book.");
+      return;
+    }
+    setBorrowLoading(bookId);
+    const res = await fetch(
+      `http://localhost:8080/api/books/${bookId}/return?userId=${user.id}`,
+      { method: "PUT" }
+    );
+    if (res.ok) {
+      setBooks(books =>
+        books.map(book =>
+          book.id === bookId ? { ...book, available: true, borrower: undefined } : book
+        )
+      );
+    } else {
+      alert("Failed to return the book.");
+    }
+    setBorrowLoading(null);
+  };
+
   const fetchOpenLibraryInfo = async (bookId: number, isbn?: string) => {
     if (!isbn) return;
     setInfoLoading(bookId);
@@ -94,103 +116,122 @@ export default function BooksPage() {
   };
 
   return (
-    <div className="min-h-screen max-w-2xl mx-auto p-4 bg-gradient-to-br from-[#f5ecd7] via-[#e3caa5] to-[#a67c52]">
-      <form
-        onSubmit={handleSearch}
-        className="flex flex-col gap-2 mb-6 bg-white/90 p-4 rounded shadow"
-      >
-        <input
-          type="text"
-          placeholder="Title"
-          value={title}
-          onChange={e => setTitle(e.target.value)}
-          className="border px-3 py-2 rounded text-[#5b3921] bg-white focus:outline-none focus:ring-2 focus:ring-[#a67c52] text-base"
-        />
-        <input
-          type="text"
-          placeholder="Genre"
-          value={genre}
-          onChange={e => setGenre(e.target.value)}
-          className="border px-3 py-2 rounded text-[#5b3921] bg-white focus:outline-none focus:ring-2 focus:ring-[#a67c52] text-base"
-        />
-        <input
-          type="text"
-          placeholder="Author"
-          value={author}
-          onChange={e => setAuthor(e.target.value)}
-          className="border px-3 py-2 rounded text-[#5b3921] bg-white focus:outline-none focus:ring-2 focus:ring-[#a67c52] text-base"
-        />
-        <button
-          type="submit"
-          className="bg-[#a67c52] text-white px-4 py-2 rounded hover:bg-[#7c5e3c] text-base"
+    <div>
+      <div className="flex justify-end mb-4">
+        <Link href="/user-books">
+          <button className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+            My Books
+          </button>
+        </Link>
+      </div>
+      <div className="min-h-screen max-w-2xl mx-auto p-4 bg-gradient-to-br from-[#f5ecd7] via-[#e3caa5] to-[#a67c52]">
+        <form
+          onSubmit={handleSearch}
+          className="flex flex-col gap-2 mb-6 bg-white/90 p-4 rounded shadow"
         >
-          Search
-        </button>
-      </form>
-      {loading ? (
-        <div className="text-[#5b3921]">Loading...</div>
-      ) : (
-        <ul>
-          {books.map((book) => (
-            <li key={book.id} className="mb-4 flex flex-col gap-2 bg-white/90 p-4 rounded shadow">
-              <div className="flex items-center gap-4">
-                {book.isbn && (
-                  <Image
-                    src={`https://covers.openlibrary.org/b/isbn/${book.isbn}-M.jpg`}
-                    alt={book.title}
-                    width={48}
-                    height={64}
-                    className="w-12 h-16 object-cover"
-                  />
-                )}
-                <Link href={`/books/${book.id}`}>
-                  <span className="text-lg font-semibold hover:underline cursor-pointer text-[#5b3921]">
-                    {book.title}
+          <input
+            type="text"
+            placeholder="Title"
+            value={title}
+            onChange={e => setTitle(e.target.value)}
+            className="border px-3 py-2 rounded text-[#5b3921] bg-white focus:outline-none focus:ring-2 focus:ring-[#a67c52] text-base"
+          />
+          <input
+            type="text"
+            placeholder="Genre"
+            value={genre}
+            onChange={e => setGenre(e.target.value)}
+            className="border px-3 py-2 rounded text-[#5b3921] bg-white focus:outline-none focus:ring-2 focus:ring-[#a67c52] text-base"
+          />
+          <input
+            type="text"
+            placeholder="Author"
+            value={author}
+            onChange={e => setAuthor(e.target.value)}
+            className="border px-3 py-2 rounded text-[#5b3921] bg-white focus:outline-none focus:ring-2 focus:ring-[#a67c52] text-base"
+          />
+          <button
+            type="submit"
+            className="bg-[#a67c52] text-white px-4 py-2 rounded hover:bg-[#7c5e3c] text-base"
+          >
+            Search
+          </button>
+        </form>
+        {loading ? (
+          <div className="text-[#5b3921]">Loading...</div>
+        ) : (
+          <ul>
+            {books.map((book) => (
+              <li key={book.id} className="mb-4 flex flex-col gap-2 bg-white/90 p-4 rounded shadow">
+                <div className="flex items-center gap-4">
+                  {book.isbn && (
+                    <Image
+                      src={`https://covers.openlibrary.org/b/isbn/${book.isbn}-M.jpg`}
+                      alt={book.title}
+                      width={48}
+                      height={64}
+                      className="w-12 h-16 object-cover"
+                    />
+                  )}
+                  <Link href={`/books/${book.isbn && book.isbn.trim() !== "" ? book.isbn : book.id}`}>
+                    <span className="text-lg font-semibold hover:underline cursor-pointer text-[#5b3921]">
+                      {book.title}
+                    </span>
+                  </Link>
+                  <span className="text-[#7c5e3c]">
+                    {" "}by {book.author} ({book.genre})
                   </span>
-                </Link>
-                <span className="text-[#7c5e3c]">
-                  {" "}by {book.author} ({book.genre})
-                </span>
-                {book.available ? (
-                  <button
-                    className="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700"
-                    onClick={() => handleBorrow(book.id)}
-                    disabled={borrowLoading === book.id}
-                  >
-                    {borrowLoading === book.id ? "Borrowing..." : "Borrow"}
-                  </button>
-                ) : (
-                  <span className="text-gray-500">Not available</span>
-                )}
-                {book.isbn && (
-                  <button
-                    className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600 ml-2"
-                    onClick={() => fetchOpenLibraryInfo(book.id, book.isbn)}
-                    disabled={infoLoading === book.id}
-                  >
-                    {infoLoading === book.id ? "Loading..." : "More Info"}
-                  </button>
-                )}
-              </div>
-              {/* Show Open Library metadata if loaded */}
-              {openLibraryData[book.id] && (
-                <div className="bg-gray-100 p-2 rounded text-sm mt-1 text-[#5b3921]">
-                  <div>
-                    <strong>Description:</strong>{" "}
-                    {getDescription(openLibraryData[book.id]?.description)}
-                  </div>
-                  <div>
-                    <strong>Published:</strong> {openLibraryData[book.id]?.publish_date || "N/A"}
-                  </div>
-                  <div>
-                    <strong>Pages:</strong> {openLibraryData[book.id]?.number_of_pages || "N/A"}
-                  </div>
+                  {book.available ? (
+                    <button
+                      className="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700"
+                      onClick={() => handleBorrow(book.id)}
+                      disabled={borrowLoading === book.id}
+                    >
+                      {borrowLoading === book.id ? "Borrowing..." : "Borrow"}
+                    </button>
+                  ) : (
+                    user && book.borrower && book.borrower.id === user.id ? (
+                      <button
+                        className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"
+                        onClick={() => handleReturn(book.id)}
+                        disabled={borrowLoading === book.id}
+                      >
+                        Return
+                      </button>
+                    ) : (
+                      <span className="text-gray-500">Not available</span>
+                    )
+                  )}
+                  {book.isbn && (
+                    <button
+                      className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600 ml-2"
+                      onClick={() => fetchOpenLibraryInfo(book.id, book.isbn)}
+                      disabled={infoLoading === book.id}
+                    >
+                      {infoLoading === book.id ? "Loading..." : "More Info"}
+                    </button>
+                  )}
                 </div>
-              )}
-            </li>
-          ))}
-        </ul>
-      )}
+                {/* Show Open Library metadata if loaded */}
+                {openLibraryData[book.id] && (
+                  <div className="bg-gray-100 p-2 rounded text-sm mt-1 text-[#5b3921]">
+                    <div>
+                      <strong>Description:</strong>{" "}
+                      {getDescription(openLibraryData[book.id]?.description)}
+                    </div>
+                    <div>
+                      <strong>Published:</strong> {openLibraryData[book.id]?.publish_date || "N/A"}
+                    </div>
+                    <div>
+                      <strong>Pages:</strong> {openLibraryData[book.id]?.number_of_pages || "N/A"}
+                    </div>
+                  </div>
+                )}
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
     </div>
   );
 }

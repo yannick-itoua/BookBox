@@ -2,6 +2,8 @@ package com.bookbox.controller;
 
 import com.bookbox.model.User;
 import com.bookbox.service.UserService;
+import com.bookbox.model.Book;
+import com.bookbox.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,6 +15,9 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private BookRepository bookRepository;
 
     // Get all users
     @GetMapping
@@ -51,5 +56,17 @@ public class UserController {
             user.setPassword(null); // Hide password in response
         }
         return user;
+    }
+
+    // Get books owned by a user
+    @GetMapping("/{id}/books")
+    public List<Book> getBooksByOwner(@PathVariable Long id) {
+        return bookRepository.findByOwnerId(id);
+    }
+
+    // Get books borrowed by a user
+    @GetMapping("/{id}/borrowed-books")
+    public List<Book> getBorrowedBooks(@PathVariable Long id) {
+        return bookRepository.findByBorrowerId(id);
     }
 }
