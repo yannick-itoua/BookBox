@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.http.HttpStatus;
 
 @RestController
 @RequestMapping("/api/books")
@@ -73,5 +75,12 @@ public class BookController {
     @PutMapping("/{bookId}/return")
     public BookDTO returnBook(@PathVariable Long bookId) {
         return bookService.returnBook(bookId);
+    }
+
+    @GetMapping("/isbn/{isbn}")
+    public BookDTO getBookByIsbn(@PathVariable String isbn) {
+        BookDTO dto = bookService.getBookByIsbn(isbn);
+        if (dto == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Book not found");
+        return dto;
     }
 }

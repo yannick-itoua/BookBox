@@ -36,7 +36,7 @@ export default function BookDetailPage() {
 
     // If all digits, treat as local DB id, else as ISBN
     if (/^\d+$/.test(idOrIsbn)) {
-      // Local book
+      // Local book by ID
       fetch(`http://localhost:8080/api/books/${idOrIsbn}`)
         .then((res) => {
           if (!res.ok) throw new Error("Book not found");
@@ -52,15 +52,16 @@ export default function BookDetailPage() {
           setLoading(false);
         });
     } else {
-      // Open Library book
-      fetch(`https://openlibrary.org/isbn/${idOrIsbn}.json`)
+      // Try local book by ISBN first
+      fetch(`http://localhost:8080/api/books/isbn/${idOrIsbn}`)
         .then((res) => {
-          if (!res.ok) throw new Error("Book not found");
-          return res.json();
+          if (res.ok) return res.json();
+          // If not found, fallback to Open Library
+          return fetch(`https://openlibrary.org/isbn/${idOrIsbn}.json`).then(r => r.ok ? r.json() : null);
         })
         .then((data) => {
           setBook(data);
-          setIsLocal(false);
+          setIsLocal(!!data && !!(data as LocalBook).id);
           setLoading(false);
         })
         .catch(() => {

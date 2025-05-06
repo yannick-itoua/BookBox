@@ -173,7 +173,8 @@ export default function BooksPage() {
                       className="w-12 h-16 object-cover"
                     />
                   )}
-                  <Link href={`/books/${book.isbn && book.isbn.trim() !== "" ? book.isbn : book.id}`}>
+                  {/* Always link to local book by ID */}
+                  <Link href={`/books/${book.id}`}>
                     <span className="text-lg font-semibold hover:underline cursor-pointer text-[#5b3921]">
                       {book.title}
                     </span>

@@ -129,4 +129,11 @@ public class BookService {
         Book updated = bookRepository.save(book);
         return toDTO(updated);
     }
+
+    // Add this public method to fetch a book by ISBN and return a DTO
+    public BookDTO getBookByIsbn(String isbn) {
+        Book book = bookRepository.findByIsbn(isbn);
+        if (book == null) return null;
+        return toDTO(book);
+    }
 }

@@ -70,7 +70,7 @@ export default function BookList({ books, currentUser, onDelete, showDelete, ref
           )}
           <div>
             {/* Show ISBN link for Open Library books, ID link for local books */}
-            <Link href={`/books/${book.isbn && book.isbn.trim() !== "" ? book.isbn : book.id}`}>
+            <Link href={`/books/${book.id}`}>
               <span className="text-lg font-semibold hover:underline cursor-pointer">{book.title}</span>
             </Link>
             <div className="text-gray-600">Author: {book.author}</div>
