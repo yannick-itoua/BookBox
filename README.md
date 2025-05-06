@@ -29,7 +29,7 @@ BookBox is a user-friendly web app built with React and Spring Boot that promote
 
 1. **Clone the repository:**
    ```sh
-   git clone https://github.com/yourusername/BookBox.git
+   git clone https://github.com/yannick-itoua/BookBox
    cd BookBox
    ```
 
